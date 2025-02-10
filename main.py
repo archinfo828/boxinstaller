@@ -1,50 +1,49 @@
 import streamlit as st
-import altair as alt
-import pandas as pd
-from vega_datasets import data
 
+def intro():
+    import streamlit as st
 
-@st.cache_data
-def get_data():
-    source = data.stocks()
-    source = source[source.date.gt("2004-01-01")]
-    return source
+    st.write("# Welcome to Streamlit! 👋")
+    st.sidebar.success("Select a demo above.")
 
+    st.markdown(
+        """
+        Streamlit is an open-source app framework built specifically for
+        Machine Learning and Data Science projects.
 
-stock_data = get_data()
+        **👈 Select a demo from the dropdown on the left** to see some examples
+        of what Streamlit can do!
 
-hover = alt.selection_single(
-    fields=["date"],
-    nearest=True,
-    on="mouseover",
-    empty="none",
-)
+        ### Want to learn more?
 
-lines = (
-    alt.Chart(stock_data, title="Evolution of stock prices")
-    .mark_line()
-    .encode(
-        x="date",
-        y="price",
-        color="symbol",
+        - Check out [streamlit.io](https://streamlit.io)
+        - Jump into our [documentation](https://docs.streamlit.io)
+        - Ask a question in our [community
+          forums](https://discuss.streamlit.io)
+
+        ### See more complex demos
+
+        - Use a neural net to [analyze the Udacity Self-driving Car Image
+          Dataset](https://github.com/streamlit/demo-self-driving)
+        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
+    """
     )
-)
 
-points = lines.transform_filter(hover).mark_circle(size=65)
+def mapping_demo():
+    import streamlit as st
+    import pandas as pd
+    import pydeck as pdk
 
-tooltips = (
-    alt.Chart(stock_data)
-    .mark_rule()
-    .encode(
-        x="yearmonthdate(date)",
-        y="price",
-        opacity=alt.condition(hover, alt.value(0.3), alt.value(0)),
-        tooltip=[
-            alt.Tooltip("date", title="Date"),
-            alt.Tooltip("price", title="Price (USD)"),
-        ],
+    from urllib.error import URLError
+
+    st.markdown(f"# {list(page_names_to_funcs.keys())[2]}")
+    st.write(
+        """
+        This demo shows how to use
+[`st.pydeck_chart`](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart)
+to display geospatial data.
+"""
     )
-    .add_selection(hover)
-)
 
-data_layer = lines + points + tooltips
+    @st.cache_data
+    def from_data_file(filename):
